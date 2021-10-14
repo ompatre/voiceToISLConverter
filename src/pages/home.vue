@@ -17,11 +17,12 @@
           <q-tab-panel name="home">
                 <div class="row justify-center q-py-md q-gutter-x-xl"> 
                     <q-select v-model="model" :options="languages" class="q-px-md col-5"/>
-                    <q-btn icon="mic" rounded class="q-pa-md" color="primary" @click="startTxtToSpeech" dense/>
+                    <q-btn icon="mic" rounded class="q-pa-md" color="primary" @click="startTxtToSpeech" dense>
+                    </q-btn>
                 </div>
                 <div :class="!$q.screen.lt.sm?'row q-px-xl q-mt-xl':'q-mt-lg column'">
                     <q-input class="col-10" placeholder="Type your text or use the voice button" v-model="inputText" filled autogrow></q-input>
-                    <q-btn class="col-2" :disable="inputText==''" label="Generate" color="secondary" no-caps @click="generateVideo"/>
+                    <q-btn class="col-2" :disable="inputText=='' || loading" label="Generate" color="secondary" no-caps @click="generateVideo"/>
                 </div>
 
                 <!-- This is video player -->
@@ -47,7 +48,7 @@
             Here you will see your previous videos
             <q-separator class="q-mt-sm"/>
             <div class="row q-gutter-md q-gutter-y-xl q-mt-sm justify-evenly">
-            <div v-for="i in history" :key="i">
+            <div v-for="(i,ind) in history" :key="i">
                 <!-- This is video player -->
                 <div class="col-4" >
                   <q-card style="min-width:310px;min-height:240px;" width="fit-content" :class="loading? 'bg-grey-3':''" >
@@ -56,11 +57,14 @@
                       </q-inner-loading>
                       <div v-if="!loading" class="q-video " >
                         <video width="310" height="240" controls>
-                          <source :src="historyVideoUrl(i)" type="video/mp4">
+                          <source :src="i" type="video/mp4">
                         </video>
                       </div>
-                      <q-card-section class="q-pt-none text-h6">
-                       {{i}}
+                      <q-card-section class="row justify-between q-pt-none text-h6">
+                        <div>
+                       {{historyNames[ind]}}
+                        </div>
+                        <q-btn class="q-pa-none" dense flat icon="hearing" @click="startSpeechToTxt(historyNames[ind])"/>
                     </q-card-section>             
                   </q-card>
                 </div>
@@ -70,8 +74,6 @@
           </q-tab-panel>
         </q-tab-panels>
    
-        <!-- <q-btn class="txt-to-speech" @click="startSpeechToTxt">Txt to speech</q-btn> -->
-
     </q-card>
     </div>
 </template>
@@ -79,14 +81,15 @@
 
 <script>
 const axios = require('axios');
-
+import { QSpinnerBars } from 'quasar'
 
 export default {
 
  data() {
    return {
      inputText:"",
-     history:[],
+     history:["https://lazt009.pythonanywhere.com/media/Videos/ww.webm"],
+     historyNames:['sd'],
      loading:false,
      tab:"home",
      runtimeTranscription_: "",
@@ -97,29 +100,28 @@ export default {
      languages:['English','Hindi','Marathi'],
    };
  },
+
  methods: {
-   historyVideoUrl(i){
-     return "https://lazt009.pythonanywhere.com/media/Videos/"+i+".webm"
-   },
    generateVideo(){
      this.loading=true;
-     this.post();
-     this.history.push(this.inputText)
+     //this.post();
+     this.historyNames.push(this.inputText)
    },
    async post(){
-     console.log(this.inputText)
      try{
         const response = await axios.post('https://lazt009.pythonanywhere.com/get-video/', {
           text:this.inputText.replace(/ /g,'')
         })
         console.log(response.data)
         this.videoUrl = "https://lazt009.pythonanywhere.com/"+response.data
+        this.history.push(this.videoUrl)
      } catch (error){
        console.log(error);
      }
      this.loading=false
    },
     startTxtToSpeech() {
+        this.$q.loading.show({spinner: QSpinnerBars})
       // initialisation of voice
       window.SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -135,7 +137,6 @@ export default {
           .join("");
         this.runtimeTranscription_ = text;
         this.inputText = text
-        console.log("asdasd")
       });
 
       // end of transcription
@@ -143,21 +144,21 @@ export default {
         this.transcription_.push(this.runtimeTranscription_);
         this.runtimeTranscription_ = "";
         recognition.stop();
+        this.$q.loading.hide()
       });
       recognition.start();
     },
-    // startSpeechToTxt() {
-    //   console.log("asdasd")
-    //   // start speech to txt
-    //   var utterance = new SpeechSynthesisUtterance(this.transcription_);
-    //   window.speechSynthesis.speak(utterance);
-    // },
+    startSpeechToTxt(text) {
+      // start speech to txt
+      var utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(utterance);
+    },
 
   }
 
 }
 </script>
 
-<style>
+<style lang="scss">
 
 </style>
