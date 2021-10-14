@@ -104,7 +104,7 @@ export default {
  methods: {
    generateVideo(){
      this.loading=true;
-     //this.post();
+     this.post();
      this.historyNames.push(this.inputText)
    },
    async post(){
