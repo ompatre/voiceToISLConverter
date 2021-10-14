@@ -27,7 +27,7 @@
 
                 <!-- This is video player -->
                 <div class="column items-center" :class="!$q.screen.lt.sm?'q-mt-xl q-pt-xl':'q-mt-xl'"  >
-                <div v-if="history.length==0">
+                <div v-if="history.length==0 && !loading">
                   <q-img src="isl2.jpg" style="height:240px;" :style="$q.screen.lt.sm?'width:290px':'width:310px'" />
                 </div>
                   <q-card v-else style="height:240px;" :style="$q.screen.lt.sm?'width:290px':'width:310px'" :class="loading? 'bg-grey-3':''" flat>
