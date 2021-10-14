@@ -88,8 +88,8 @@ export default {
  data() {
    return {
      inputText:"",
-     history:["https://lazt009.pythonanywhere.com/media/Videos/ww.webm"],
-     historyNames:['sd'],
+     history:[],
+     historyNames:[],
      loading:false,
      tab:"home",
      runtimeTranscription_: "",
