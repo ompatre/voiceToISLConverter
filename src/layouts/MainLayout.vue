@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          ISL
+          Voice2Sign
         </q-toolbar-title>
 
       </q-toolbar>
