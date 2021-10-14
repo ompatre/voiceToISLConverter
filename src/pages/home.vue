@@ -89,7 +89,7 @@ export default {
      tab:"home",
      runtimeTranscription_: "",
      transcription_: [],
-     lang_: "hi-Hindi",
+     lang_: "En-",
      model:'English',
      videoUrl:"https://lazt009.pythonanywhere.com/media/Videos/ww.webm",
      languages:['English','Hindi','Marathi'],
