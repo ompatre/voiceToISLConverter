@@ -16,7 +16,7 @@
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="home">
                 <div class="row justify-center q-py-md q-gutter-x-xl"> 
-                    <q-select v-model="model" :options="languages" class="q-px-md col-5"/>
+                    <q-select v-model="model" :options="languages" @click="didi('sd')" @input="didi(val)" class="q-px-md col-5"/>
                     <q-btn icon="mic" rounded class="q-pa-md" color="primary" @click="startTxtToSpeech" dense>
                     </q-btn>
                 </div>
@@ -84,7 +84,6 @@ const axios = require('axios');
 import { QSpinnerBars } from 'quasar'
 
 export default {
-
  data() {
    return {
      inputText:"",
@@ -97,11 +96,14 @@ export default {
      lang_: "En-",
      model:'English',
      videoUrl:"https://lazt009.pythonanywhere.com/media/Videos/ww.webm",
-     languages:['English','Hindi','Marathi'],
+     languages:['English','Hindi'],
    };
  },
 
  methods: {
+   didi(val){
+     console.log(val)
+   },
    generateVideo(){
      this.loading=true;
      this.post();
@@ -110,7 +112,7 @@ export default {
    async post(){
      try{
         const response = await axios.post('https://lazt009.pythonanywhere.com/get-video/', {
-          text:this.inputText.replace(/ /g,'')
+          text:this.inputText
         })
         console.log(response.data)
         this.videoUrl = "https://lazt009.pythonanywhere.com/"+response.data
@@ -120,13 +122,18 @@ export default {
      }
      this.loading=false
    },
+   getLang(){
+     console.log(this.model)
+     if (this.model=='English') return 'En-'
+     else return 'Hi-'
+   },
     startTxtToSpeech() {
         this.$q.loading.show({spinner: QSpinnerBars})
       // initialisation of voice
       window.SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new window.SpeechRecognition();
-      recognition.lang = this.lang_;
+      recognition.lang = this.getLang();
       recognition.interimResults = true;
 
       // event current voice reco word
