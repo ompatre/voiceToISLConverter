@@ -16,7 +16,7 @@
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="home">
                 <div class="row justify-center q-py-md q-gutter-x-xl"> 
-                    <q-select v-model="model" :options="languages" @click="didi('sd')" @input="didi(val)" class="q-px-md col-5"/>
+                    <q-select v-model="model" :options="languages" class="q-px-md col-5"/>
                     <q-btn icon="mic" rounded class="q-pa-md" color="primary" @click="startTxtToSpeech" dense>
                     </q-btn>
                 </div>
@@ -35,7 +35,7 @@
                         <q-spinner-gears size="50px" color="primary" />
                       </q-inner-loading>
                       <div v-if="!loading" class="q-video " >
-                        <video :width="$q.screen.lt.sm?'290':'310'" height="240" controls>
+                        <video :width="$q.screen.lt.sm?'290':'310'" height="240" controls autoplay>
                           <source :src="videoUrl" type="video/mp4">
                         </video>
                       </div>             
@@ -101,9 +101,6 @@ export default {
  },
 
  methods: {
-   didi(val){
-     console.log(val)
-   },
    generateVideo(){
      this.loading=true;
      this.post();
@@ -114,7 +111,6 @@ export default {
         const response = await axios.post('https://lazt009.pythonanywhere.com/get-video/', {
           text:this.inputText
         })
-        console.log(response.data)
         this.videoUrl = "https://lazt009.pythonanywhere.com/"+response.data
         this.history.push(this.videoUrl)
      } catch (error){
@@ -123,7 +119,6 @@ export default {
      this.loading=false
    },
    getLang(){
-     console.log(this.model)
      if (this.model=='English') return 'En-'
      else return 'Hi-'
    },
