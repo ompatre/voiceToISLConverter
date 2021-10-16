@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Voice2Sign
+          Speech2Sign
         </q-toolbar-title>
 
       </q-toolbar>

@@ -9,26 +9,26 @@
             indicator-color="primary"
             align="justify"
             >
-          <q-tab name="home" label="Home" no-caps/>
-          <q-tab name="history" label="History" no-caps />
+          <q-tab name="home" :label="$t('Home')" no-caps/>
+          <q-tab name="history" :label="$t('History')" no-caps />
         </q-tabs>
 
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="home">
                 <div class="row justify-center q-py-md q-gutter-x-xl"> 
-                    <q-select v-model="model" :options="languages" class="q-px-md col-5"/>
+                    <q-select v-model="model" :options="languages" class="q-px-md col-5" @update:model-value="dodo"/>
                     <q-btn icon="mic" rounded class="q-pa-md" color="primary" @click="startTxtToSpeech" dense>
                     </q-btn>
                 </div>
                 <div :class="!$q.screen.lt.sm?'row q-px-xl q-mt-xl':'q-mt-lg column'">
-                    <q-input class="col-10" placeholder="Type your text or use the voice button" v-model="inputText" filled autogrow></q-input>
-                    <q-btn class="col-2" :disable="inputText=='' || loading" label="Generate" color="secondary" no-caps @click="generateVideo"/>
+                    <q-input class="col-10" :placeholder="$t('Type your text or use the voice button')" v-model="inputText" filled autogrow></q-input>
+                    <q-btn class="col-2" :disable="inputText=='' || loading" :label="$t('Generate')" color="secondary" no-caps @click="generateVideo"/>
                 </div>
 
                 <!-- This is video player -->
                 <div class="column items-center" :class="!$q.screen.lt.sm?'q-mt-xl q-pt-xl':'q-mt-xl'"  >
                 <div v-if="history.length==0 && !loading">
-                  <q-img src="isl2.jpg" style="height:240px;" :style="$q.screen.lt.sm?'width:290px':'width:310px'" />
+                  <q-img src="isl4.jpg" style="height:240px;" :style="$q.screen.lt.sm?'width:290px':'width:310px'" />
                 </div>
                   <q-card v-else style="height:240px;" :style="$q.screen.lt.sm?'width:290px':'width:310px'" :class="loading? 'bg-grey-3':''" flat>
                       <q-inner-loading :showing="loading">
@@ -44,8 +44,8 @@
           </q-tab-panel>
 
           <q-tab-panel name="history">
-            <div class="text-h6">History</div>
-            Here you will see your previous videos
+            <div class="text-h6">{{ $t("History")}}</div>
+            {{$t("Here you will see your previous videos")}}
             <q-separator class="q-mt-sm"/>
             <div class="row q-gutter-md q-gutter-y-xl q-mt-sm justify-evenly">
             <div v-for="(i,ind) in history" :key="i">
@@ -96,11 +96,20 @@ export default {
      lang_: "En-",
      model:'English',
      videoUrl:"https://lazt009.pythonanywhere.com/media/Videos/ww.webm",
-     languages:['English','Hindi'],
+     languages:['English','हिंदी'],
    };
  },
-
+  created(){
+    console.log(this.$i18n.locale)
+  },
  methods: {
+   dodo(val){
+     if (val=='English'){
+        this.$i18n.locale = "en-Us";
+     }else{
+      this.$i18n.locale = "hn";
+     }
+   },
    generateVideo(){
      this.loading=true;
      this.post();
