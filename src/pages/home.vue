@@ -95,7 +95,7 @@ export default {
      transcription_: [],
      lang_: "En-",
      model:'English',
-     videoUrl:"https://lazt009.pythonanywhere.com/media/Videos/ww.webm",
+     videoUrl:"http://127.0.0.1:8000/media/Videos/merged.mp4",
      languages:['English','हिंदी'],
    };
  },
@@ -117,10 +117,11 @@ export default {
    },
    async post(){
      try{
-        const response = await axios.post('https://lazt009.pythonanywhere.com/get-video/', {
+        const response = await axios.post('http://127.0.0.1:8000/get-video/', {
           text:this.inputText
         })
-        this.videoUrl = "https://lazt009.pythonanywhere.com/"+response.data
+        console.log(response.data)
+        this.videoUrl = "http://127.0.0.1:8000"+response.data
         this.history.push(this.videoUrl)
      } catch (error){
        console.log(error);
