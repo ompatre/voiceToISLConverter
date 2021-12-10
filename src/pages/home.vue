@@ -95,7 +95,7 @@ export default {
      transcription_: [],
      lang_: "En-",
      model:'English',
-     videoUrl:"http://127.0.0.1:8000/media/Videos/merged.mp4",
+     videoUrl:"",
      languages:['English','हिंदी'],
    };
  },
@@ -117,11 +117,11 @@ export default {
    },
    async post(){
      try{
-        const response = await axios.post('http://127.0.0.1:8000/get-video/', {
+        const response = await axios.post('https://isl-converter-backend.herokuapp.com/get-video/', {
           text:this.inputText
         })
         console.log(response.data)
-        this.videoUrl = "http://127.0.0.1:8000"+response.data
+        this.videoUrl = "https://isl-converter-backend.herokuapp.com"+response.data
         this.history.push(this.videoUrl)
      } catch (error){
        console.log(error);
